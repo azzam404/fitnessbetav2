@@ -1,0 +1,8 @@
+pizza
+burger
+sushi
+salad
+sandwich
+pasta
+ice_cream
+steak
