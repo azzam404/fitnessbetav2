@@ -2,9 +2,18 @@ import 'package:fitnessbetav2/pages/auth_service.dart';
 import 'package:fitnessbetav2/pages/profilepage.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class Homepage extends StatelessWidget {
   const Homepage({super.key});
+
+  final List<Map<String, dynamic>> fitnessTips = const [
+    {"text": "Stay hydrated! 💧", "color": Colors.teal},
+    {"text": "Warm up before workouts. 🔥", "color": Colors.deepOrange},
+    {"text": "Get 7-8 hours of sleep. 💤", "color": Colors.purple},
+    {"text": "Focus on proper form, not just weight. 🏋️", "color": Colors.indigo},
+    {"text": "Consistency is key! 💪", "color": Colors.green},
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -15,12 +24,12 @@ class Homepage extends StatelessWidget {
       backgroundColor: const Color.fromRGBO(32, 42, 68, 1),
       body: CustomScrollView(
         slivers: [
-          // SliverAppBar (Shrinks on Scroll)
+          // SliverAppBar
           SliverAppBar(
-            expandedHeight: 120.0, // Height when fully expanded
+            expandedHeight: 120.0,
             backgroundColor: const Color.fromRGBO(32, 42, 68, 1),
             floating: false,
-            pinned: true, // Stays at the top when scrolling up
+            pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               titlePadding: const EdgeInsets.only(left: 20, bottom: 10),
               title: const Text(
@@ -91,10 +100,15 @@ class Homepage extends StatelessWidget {
             ),
           ),
 
-          // Fitness Stats (Progress, Calories, Workout, Steps)
+          // Main content
           SliverList(
             delegate: SliverChildListDelegate([
               const SizedBox(height: 10),
+
+              // Fitness Tips Carousel
+              _buildTipsCarousel(context),
+
+              const SizedBox(height: 20),
 
               // Caloric Intake Box
               _buildFitnessCard(
@@ -124,6 +138,57 @@ class Homepage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  // Widget for Fitness Tips Carousel
+  Widget _buildTipsCarousel(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    return CarouselSlider(
+      options: CarouselOptions(
+        height: 180,
+        autoPlay: true,
+        enlargeCenterPage: true,
+        enableInfiniteScroll: true,
+        viewportFraction: 0.95, // wider: closer to screen edges
+      ),
+      items: fitnessTips.map((tip) {
+        return Builder(
+          builder: (BuildContext context) {
+            return Container(
+              width: screenWidth * 0.95,
+              margin: const EdgeInsets.symmetric(horizontal: 2.0),
+              decoration: BoxDecoration(
+                color: tip["color"],
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Text(
+                    tip["text"],
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      }).toList(),
     );
   }
 
